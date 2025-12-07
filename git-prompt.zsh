@@ -229,22 +229,29 @@ function _zsh_git_prompt_git_status() {
 
                 tracking_element(AHEAD, ahead * 1);
 
-                prompt_element(SEPARATOR);
-
-                local_element(UNMERGED, unmerged);
-
-                local_element(STAGED, staged);
-
-                local_element(UNSTAGED, unstaged);
-
-                local_element(UNTRACKED, untracked);
-
-                if (SHOW_STASH) {
-                    local_element(STASHED, stashed);
-                }
-
                 if (unmerged == 0 && staged == 0 && unstaged == 0 && untracked == 0) {
-                    prompt_element(CLEAN);
+                    if (CLEAN == "") {
+                        if (SHOW_STASH && stashed > 0) {
+                            prompt_element(SEPARATOR);
+                            local_element(STASHED, stashed);
+                        }
+                        prompt_element(CLEAN);
+                    } else {
+                        prompt_element(SEPARATOR);
+                        if (SHOW_STASH) {
+                            local_element(STASHED, stashed);
+                        }
+                        prompt_element(CLEAN);
+                    }
+                } else {
+                    prompt_element(SEPARATOR);
+                    local_element(UNMERGED, unmerged);
+                    local_element(STAGED, staged);
+                    local_element(UNSTAGED, unstaged);
+                    local_element(UNTRACKED, untracked);
+                    if (SHOW_STASH) {
+                        local_element(STASHED, stashed);
+                    }
                 }
 
                 prompt_element(SUFFIX);
